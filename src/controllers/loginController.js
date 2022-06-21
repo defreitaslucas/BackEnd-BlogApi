@@ -6,7 +6,6 @@ const login = express();
 login.post('/', async (req, res) => {
   const { email, password } = req.body;
   const token = await authenticator(email, password);
-  console.log(token);
   if (token && token.message) {
     return res.status(token.status).json({ message: token.message });
   }

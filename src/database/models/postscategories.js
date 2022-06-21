@@ -3,7 +3,6 @@ module.exports = (sequelize, DataTypes) => {
   {
     timestamps: false,
   });
-
   PostCategories.associate = (models) => {
     models.BlogPosts.belongsToMany(models.Categories, {
       as: 'Categories',

@@ -19,6 +19,13 @@ const createUser = async ({ displayName, email, password, image }) => {
   return generateJWTToken(userCreate);
 };
 
+const getUserAll = async () => {
+  const usersAll = await User
+  .findAll({ attributes: ['id', 'displayName', 'email', 'id', 'image'] });
+  return usersAll;
+};
+
 module.exports = {
   createUser,
+  getUserAll,
 };

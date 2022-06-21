@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { createUser, getUserAll } = require('../services/userService');
+const { createUser, getUserAll, getUserById } = require('../services/userService');
 const userAuthenticated = require('../middlewares/userAuthenticated');
 const tokenAuthenticated = require('../middlewares/tokenAuth');
 
@@ -22,6 +22,15 @@ user.get('/', tokenAuthenticated, async (req, res) => {
   } catch (error) {
     return res.status(401).json(error.message);
   }
+});
+
+user.get('/:id', tokenAuthenticated, async (req, res) => {
+  const { id } = req.params;
+  const userById = await getUserById(id);
+  if (userById.message) {
+    return res.status(userById.status).json({ message: userById.message });
+  }
+  return res.status(200).json(userById);
 });
 
 module.exports = user;

@@ -10,9 +10,6 @@ const tokenAuthenticated = async (req, res, next) => {
       throw Object.assign(new Error('Token not found'), { status: 401 });
     }
     const validate = await jwt.verify(token, TOKEN_SECRET);
-    // if (!validate) {
-    //   throw Object.assign(new Error('jwt malformed'), { status: 401 });
-    // }
     res.locals.user = validate;
     next();
   } catch (error) {

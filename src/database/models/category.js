@@ -4,8 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING(255),
   },
   {
-    timestamps: false,
     tableName: 'Categories',
+    timestamps: false,
   });
 
   return Category;

@@ -41,11 +41,30 @@ const getAllBlogPost = async () => {
     },
   ],
   });
-  if (!getAll) return Error('Not Found');
+  if (!getAll) throw Error('Not Found');
   return getAll;
+};
+
+const getById = async (id) => {
+  const getFindById = await BlogPost.findByPk(id, {
+    include: [{
+      model: User,
+      as: 'user',
+      attributes: { exclude: ['password'] },
+    },
+    {
+      model: Category,
+      as: 'categories',
+      through: { attributes: [] },
+    },
+  ],
+  });
+  if (!getFindById) throw Error('Post does not exist');
+  return getFindById;
 };
 
 module.exports = {
   createBlogPost,
   getAllBlogPost,
+  getById,
 };

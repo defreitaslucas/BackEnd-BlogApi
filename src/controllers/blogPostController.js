@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { createBlogPost, getAllBlogPost } = require('../services/blogPostService');
+const { createBlogPost, getAllBlogPost, getById } = require('../services/blogPostService');
 const tokenAuthenticated = require('../middlewares/tokenAuth');
 const validateBlogPostMiddleware = require('../middlewares/blogPostAuthenticated');
 
@@ -22,6 +22,16 @@ blogPost.get('/', tokenAuthenticated, async (req, res) => {
   try {
     const getBlogPost = await getAllBlogPost();
     return res.status(200).json(getBlogPost);
+  } catch (error) {
+    return res.status(404).json({ message: error.message });
+  }
+});
+
+blogPost.get('/:id', tokenAuthenticated, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const getBlogPostById = await getById(id);
+    return res.status(200).json(getBlogPostById);
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }

@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { createBlogPost } = require('../services/blogPostService');
+const { createBlogPost, getAllBlogPost } = require('../services/blogPostService');
 const tokenAuthenticated = require('../middlewares/tokenAuth');
 const validateBlogPostMiddleware = require('../middlewares/blogPostAuthenticated');
 
@@ -15,6 +15,15 @@ blogPost.post('/', tokenAuthenticated, validateBlogPostMiddleware, async (req, r
     return res.status(201).json(addBlogPost);
   } catch (error) {
     return res.status(500).json({ message: error.message });
+  }
+});
+
+blogPost.get('/', tokenAuthenticated, async (req, res) => {
+  try {
+    const getBlogPost = await getAllBlogPost();
+    return res.status(200).json(getBlogPost);
+  } catch (error) {
+    return res.status(404).json({ message: error.message });
   }
 });
 

@@ -31,12 +31,12 @@ const getAllBlogPost = async () => {
   const getAll = await BlogPost.findAll({
     include: [{
       model: User,
-      as: 'User',
+      as: 'user',
       attributes: { exclude: ['password'] },
     },
     {
       model: Category,
-      as: 'Categories',
+      as: 'categories',
       through: { attributes: [] },
     },
   ],

@@ -39,7 +39,7 @@ const getAllBlogPost = async () => {
       as: 'categories',
       through: { attributes: [] },
     },
-  ],
+    ],
   });
   if (!getAll) throw Error('Not Found');
   return getAll;
@@ -57,14 +57,31 @@ const getById = async (id) => {
       as: 'categories',
       through: { attributes: [] },
     },
-  ],
+    ],
   });
   if (!getFindById) throw Error('Post does not exist');
   return getFindById;
+};
+
+const verifyUserPost = async (postId, userId) => {
+  const verify = await getById(postId);
+  if (verify.dataValues.userId !== userId) {
+    return { code: 401, message: 'Unauthorized user' };
+  }
+  return verify;
+};
+
+const updateBlogPost = async (title, content, id) => {
+  const update = await BlogPost.update({ title, content, updated: Date.now() }, { where: { id } });
+  if (!update) throw Error('Erro no update');
+  const findUpdate = await getById(id);
+  return findUpdate;
 };
 
 module.exports = {
   createBlogPost,
   getAllBlogPost,
   getById,
+  updateBlogPost,
+  verifyUserPost,
 };

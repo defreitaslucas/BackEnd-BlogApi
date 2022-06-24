@@ -6,11 +6,9 @@ const TOKEN_SECRET = process.env.JWT_SECRET;
 const tokenAuthenticated = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
-    if (!token) {
-      throw Object.assign(new Error('Token not found'), { status: 401 });
-    }
+    if (!token) throw Object.assign(new Error('Token not found'), { status: 401 });
     const validate = await jwt.verify(token, TOKEN_SECRET);
-    res.locals.user = validate;
+    req.user = validate;
     next();
   } catch (error) {
     if (error.message === 'jwt malformed') {

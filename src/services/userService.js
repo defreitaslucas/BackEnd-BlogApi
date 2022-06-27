@@ -33,8 +33,17 @@ const getUserById = async (id) => {
   return userById;
 };
 
+const userDelete = async (userId) => {
+  const verifyDelete = await User.destroy({ where: { id: userId } });
+  if (!verifyDelete) {
+    return { code: 500, message: 'oops something went wrong' };
+  }
+  return verifyDelete;
+};
+
 module.exports = {
   createUser,
   getUserAll,
   getUserById,
+  userDelete,
 };

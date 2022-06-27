@@ -84,7 +84,7 @@ const deletePostById = async (postId, userId) => {
     if (verifyPost.message) {
       return verifyPost;
     }
-    const deleteBlogPost = await BlogPost.destroy(verifyPost.id);
+  const deleteBlogPost = await BlogPost.destroy({ where: { id: verifyPost.id } });
     return deleteBlogPost;
   } catch (error) {
     return error;

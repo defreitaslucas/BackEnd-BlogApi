@@ -78,10 +78,24 @@ const updateBlogPost = async (title, content, id) => {
   return findUpdate;
 };
 
+const deletePostById = async (postId, userId) => {
+  try {
+    const verifyPost = await verifyUserPost(postId, userId);
+    if (verifyPost.message) {
+      return verifyPost;
+    }
+    const deleteBlogPost = await BlogPost.destroy(verifyPost.id);
+    return deleteBlogPost;
+  } catch (error) {
+    return error;
+  }
+};
+
 module.exports = {
   createBlogPost,
   getAllBlogPost,
   getById,
   updateBlogPost,
   verifyUserPost,
+  deletePostById,
 };

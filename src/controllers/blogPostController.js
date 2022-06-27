@@ -5,7 +5,8 @@ const {
   getAllBlogPost,
   getById,
   updateBlogPost,
-  verifyUserPost } = require('../services/blogPostService');
+  verifyUserPost,
+  deletePostById } = require('../services/blogPostService');
 const tokenAuthenticated = require('../middlewares/tokenAuth');
 const validateBlogPostMiddleware = require('../middlewares/blogPostAuthenticated');
 const validatePutBlogPostMiddleware = require('../middlewares/putPostBlogBodyAuth');
@@ -55,4 +56,17 @@ blogPost.put('/:id', tokenAuthenticated, validatePutBlogPostMiddleware, async (r
     return res.status(200).json(updatePost);
 });
 
+blogPost.delete('/:id', tokenAuthenticated, async (req, res) => {
+    const postId = req.params.id;
+    const userId = req.user.id;
+  
+    const deletePost = await deletePostById(postId, userId);
+    if (deletePost.message === 'Post does not exist') {
+      return res.status(404).json({ message: deletePost.message });
+    } 
+    if (deletePost.message === 'Unauthorized user') {
+      return res.status(401).json({ message: deletePost.message });
+    }
+    return res.status(204).end();
+});
 module.exports = blogPost;

@@ -6,7 +6,8 @@ const {
   getById,
   updateBlogPost,
   verifyUserPost,
-  deletePostById } = require('../services/blogPostService');
+  deletePostById,
+  searchTerm } = require('../services/blogPostService');
 const tokenAuthenticated = require('../middlewares/tokenAuth');
 const validateBlogPostMiddleware = require('../middlewares/blogPostAuthenticated');
 const validatePutBlogPostMiddleware = require('../middlewares/putPostBlogBodyAuth');
@@ -32,6 +33,12 @@ blogPost.get('/', tokenAuthenticated, async (req, res) => {
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }
+});
+
+blogPost.get('/search', tokenAuthenticated, async (req, res) => {
+  const { q } = req.query;
+  const search = await searchTerm(q);
+  return res.status(200).json(search);
 });
 
 blogPost.get('/:id', tokenAuthenticated, async (req, res) => {
@@ -69,4 +76,5 @@ blogPost.delete('/:id', tokenAuthenticated, async (req, res) => {
     }
     return res.status(204).end();
 });
+
 module.exports = blogPost;

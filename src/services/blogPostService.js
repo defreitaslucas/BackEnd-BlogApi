@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { Category, BlogPost, sequelize, PostCategory, User } = require('../database/models');
 
 const validCategoryFunction = async (categoryIds) => {
@@ -84,11 +85,30 @@ const deletePostById = async (postId, userId) => {
     if (verifyPost.message) {
       return verifyPost;
     }
-  const deleteBlogPost = await BlogPost.destroy({ where: { id: verifyPost.id } });
+    const deleteBlogPost = await BlogPost.destroy({ where: { id: verifyPost.id } });
     return deleteBlogPost;
   } catch (error) {
     return error;
   }
+};
+
+const searchTerm = async (q) => {
+  if (!q) {
+    const searchAll = await getAllBlogPost();
+    return searchAll;
+  }
+  const searchQuery = await BlogPost.findAll({
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+      where: {
+        [Op.or]: [{ title: { [Op.like]: `%${q}%` } },
+        { content: { [Op.like]: `%${q}%` } }],
+      },
+    });
+  if (!searchQuery) return [];
+  return searchQuery;
 };
 
 module.exports = {
@@ -98,4 +118,5 @@ module.exports = {
   updateBlogPost,
   verifyUserPost,
   deletePostById,
+  searchTerm,
 };
